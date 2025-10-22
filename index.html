@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <script src="https://bundle.run/buffer@6.0.3"></script>
+        <script>var Buffer = buffer.Buffer;</script>
+        <script src="https://supertestnet.github.io/gcs_filter/gcs_filter.js"></script>
+        <title>Getting Started</title>
+    </head>
+    <body>
+        <script>
+            console.log( 'I am using this tutorial: https://blog.trezor.io/bip158-compact-block-filters-9b813b07a878' );
+            console.log( `I am testing against this testnet block: https://mempool.space/testnet/block/000000000000015d6077a411a8f5cc95caf775ccf11c54e27df75ce58d187313` );
+            console.log( `its compact block filter is: 09027acea61b6cc3fb33f5d52f7d088a6b2f75d234e89ca800` );
+            var block_filter = Buffer.from( "09027acea61b6cc3fb33f5d52f7d088a6b2f75d234e89ca800", "hex" );
+            var filter = gcs_filter( block_filter );
+            var block_hash = Buffer.from( "000000000000015d6077a411a8f5cc95caf775ccf11c54e27df75ce58d187313", "hex" );
+            var key = block_hash.reverse().slice( 0, 16 );
+            console.log( `we will check if the following testnet addresses sent or received money in it:`, `mmEfi2cW9Vizeau3E6zzmRvbmzJXNrmW9Z, my2hmDuD9XjmtQWFu9HyyNAsE5WGSDBKpQ, mfWxJ45yp2SFn7UciZyNpvDKrzbhyfKrY8` );
+            var script1 = Buffer.from( "76a9143ebc40e411ed3c76f86711507ab952300890397288ac", "hex" );  // mmEfi2cW9Vizeau3E6zzmRvbmzJXNrmW9Z
+            var script2 = Buffer.from( "76a914c01a7ca16b47be50cbdbc60724f701d52d75156688ac", "hex" );  // my2hmDuD9XjmtQWFu9HyyNAsE5WGSDBKpQ
+            var script3 = Buffer.from( "76a914000000000000000000000000000000000000000088ac", "hex" );  // made-up, but mfWxJ45yp2SFn7UciZyNpvDKrzbhyfKrY8
+            console.log( 'the address mmEfi2cW9Vizeau3E6zzmRvbmzJXNrmW9Z sent or received money in that block, right?', filter.match( key, script1 ) );
+            console.log( 'the address my2hmDuD9XjmtQWFu9HyyNAsE5WGSDBKpQ sent or received money in that block, right?', filter.match( key, script2 ) );
+            console.log( 'the address mfWxJ45yp2SFn7UciZyNpvDKrzbhyfKrY8 sent or received money in that block, right?', filter.match( key, script3 ) );
+        </script>
+    </body>
+</html>
